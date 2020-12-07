@@ -1,0 +1,26 @@
+CREATE VIEW vw_BPStatus AS
+SELECT Data,Name,Description
+FROM MultiPurposeTag
+WHERE TypeEnum = 5;
+
+
+CREATE VIEW vw_ProductCategories AS
+SELECT Data,Name,Description
+FROM MultiPurposeTag
+WHERE TypeEnum = 2;
+
+
+CREATE VIEW vw_ProductSizes AS
+SELECT Data,Name,Description
+FROM MultiPurposeTag
+WHERE TypeEnum = 1;
+
+CREATE VIEW vw_ProductStatus AS
+SELECT Data,Name,Description
+FROM MultiPurposeTag
+WHERE TypeEnum = 3;
+
+CREATE VIEW vw_ReceiptStatus AS
+SELECT Data,Name,Description
+FROM MultiPurposeTag
+WHERE TypeEnum = 4;
