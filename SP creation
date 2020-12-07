@@ -1,0 +1,69 @@
+DELIMITER $$
+CREATE PROCEDURE Insert_ReceiptDetails(
+	IN @ProductDetails TEXT,
+	IN @ReceiptDetails TEXT,
+	IN @BusinessPartnerId INT,
+) 
+BEGIN
+	/** S - Declare Local Variables **/
+    DECLARE @productCC INT DEFAULT 0;
+	DECLARE @productMax INT DEFAULT JSON_LENGTH(@ProductDetails);
+    DECLARE @InsertedReceiptId INT DEFAULT 0;
+
+	/** S - Declare Type Enums **/
+    DECLARE @receiptActiveState INT DEFAULT 1;
+	DECLARE @stillNotPrintedState INT DEFAULT 0;
+
+	/** S - Insert Recept Details **/
+    INSERT INTO Receipt (BSPId, TotalAmount, CustomerGivenAmount, Remark, mpt_Status, IsPrinted, LastUpdateDateTime)
+      VALUES	(	@BusinessPartnerId, 
+					JSON_VALUE(@ReceiptDetails, CONCAT('$.TotalAmount')),
+					JSON_VALUE(@ReceiptDetails, CONCAT('$.CustomerGivenAmount')),
+					JSON_VALUE(@ReceiptDetails, CONCAT('$.Remark')),
+                	@receiptActiveState,
+                	@stillNotPrintedState,
+                	CURDATE()); 
+    
+	/** S - Get Inserted record id **/                
+    SELECT @InsertedReceiptId = LAST_INSERT_ID();      
+    
+	/** S - Loop Receipt Products **/
+    WHILE @productCC < @productMax DO
+		/** S - Insert Product Receipt Details **/
+         INSERT INTO ProductReceiptMap (ReceiptId, ProductId, ProductPriceMapId, Quantity)
+			VALUES	(	@InsertedReceiptId, 
+					JSON_VALUE(@ProductDetails, CONCAT('$[', @productCC, '].ProductId')),
+					JSON_VALUE(@ProductDetails, CONCAT('$[', @productCC, '].ProductPriceMapId')),
+					JSON_VALUE(@ProductDetails, CONCAT('$[', @productCC, '].Quantity')) );   
+		
+		/** S - Update Stocke **/			
+		UPDATE Stock SET CurrentStock = (CurrentStock - JSON_VALUE(@ProductDetails, CONCAT('$[', @productCC, '].Quantity')))   
+			WHERE ProductId = JSON_VALUE(@ProductDetails, CONCAT('$[', @productCC, '].ProductId')) AND
+			  mpt_SizeEnum = JSON_VALUE(@ProductDetails, CONCAT('$[', @productCC, '].mpt_SizeEnum'));
+		 
+        SET @productCC = @productCC + 1;
+    END WHILE;
+END
+
+
+
+DELIMITER $$
+CREATE PROCEDURE Select_AllActiveProducts() 
+BEGIN  
+	/** Declare TypeEnums **/
+    SET @ActiveProductType = 1;
+    
+	/** Select Product Data **/
+    SELECT 	PRD.Id, PRD.Name, PRD.Code,PRD.mpt_CategoryEnum, PRDC.Description, PRD.mpt_StatusEnum, PRST.Description,
+            PPM.mpt_SizeEnum, PRSZ.Description, PPM.Price, PPM.Discount, (PPM.Price - PPM.Discount) AS DiscountedPrice, STC.CurrentStock
+    FROM Product PRD
+    INNER JOIN ProductPriceMap PPM ON PPM.ProductId = PRD.Id
+    INNER JOIN Stock STC ON STC.ProductId = PRD.Id AND STC.mpt_SizeEnum = PPM.mpt_SizeEnum
+    LEFT JOIN vw_ProductCategories PRDC ON PRDC.Data = PRD.mpt_CategoryEnum
+    LEFT JOIN vw_ProductSizes PRSZ ON PRSZ.Data = PPM.mpt_SizeEnum
+    LEFT JOIN vw_ProductStatus PRST ON PRST.Data = PRD.mpt_StatusEnum
+    WHERE PRD.mpt_StatusEnum = @ActiveProductType; 
+END
+$$
+
+DELIMITER ;
