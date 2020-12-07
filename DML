@@ -1,0 +1,78 @@
+/*
+* S - Insert Business Partner **/
+INSERT INTO BusinessPartner (Name, mpt_StatusEnum, LastUpdateDateTime)
+VALUES 	('Duleesha', 1, CURDATE()),
+		('Sudeshi', 2, CURDATE());
+
+/** S - Insert Business Partner Addresses **/
+INSERT INTO BusinessPartnerAddressDetails (BusinessPartnerId, Address, LastUpdateDateTime)
+VALUES 	(1, 'ABC, Kamburupitiya, Matara', CURDATE()),
+		(2, 'EFG, Maharagama', CURDATE());
+
+/** S - Insert Business Partner Contact Details **/
+INSERT INTO BusinessPartnerContactDetails (BusinessPartnerId, PhoneNumber, Email, LastUpdateDateTime)
+VALUES 	(1, '0718823652', 'abc@gmail.com', CURDATE()),
+		(2, '0718823654', 'cde@gmail.com', CURDATE());
+    
+    
+  
+
+
+INSERT INTO MultiPurposeTagType
+(
+	Data,Name,Description
+) values (1, 'Sizes', 'Product Sizes'),
+		 (2, 'Categories', 'Product Categories'),
+		 (3, 'Product Status', 'Product Status'),
+         (4, 'Receipt Status', 'Receipt Status'),
+		 (5, 'BPStatus', 'Business Partner Status');
+
+INSERT INTO MultiPurposeTag
+(
+	TypeEnum,Data,Name,Description
+) values (1, 1, 'Small', 'Small Size Item'),
+		 (1, 2, 'Regular', 'Regular Size Item'),
+         (1, 3, 'Large', 'Large Size Item'),	
+		 (2, 1, 'Coffee', 'Coffee Related Items'),		 
+		 (2, 2, 'Short Eats', 'Short Eats Related Items'),		 
+		 (2, 3, 'Cakes', 'Cakes Related Items'),		 
+		 (2, 4, 'Cookies', 'cookies Related Items'),		 
+		 (3, 1, 'Active', 'Active Item'),		 
+		 (3, 2, 'Blocked', 'Blocked Item'),		 
+		 (3, 3, 'Inactive', 'Inactive - Out of Stock'),		 	 
+		 (4, 1, 'Success', 'Successed Receipt'),
+         (4, 2, 'New', 'New Receipt - Payment pending'),
+         (4, 3, 'Cancelled', 'Cancelled Receipt'),
+		 (5, 1, 'Active', 'Active Business Partner'),
+		 (5, 2, 'Blocked', 'Blocked Business Partner');
+     
+     
+ 
+ 
+ /** S - Product Stocks **/
+INSERT INTO Stock (ProductId, mpt_SizeEnum, CurrentStock, ReorderLimit, LastUpdateDateTime)
+VALUES 	(1, 2, 10, 2, CURDATE()),
+		(2, 2, 20, 5, CURDATE()),
+        (3, 1,10, 2, CURDATE()),
+        (3, 2,20, 4, CURDATE()),
+        (3, 3,30, 6, CURDATE()),
+        (4, 2,0, 0, CURDATE());
+        
+        
+/** S - Insert Product Data **/
+INSERT INTO Product (Code, Name, mpt_CategoryEnum, mpt_StatusEnum, LastUpdateDateTime)
+VALUES 	('COFEE01', 'Americano', 1, 1, CURDATE()),
+		('COFEE02', 'Cappuccino', 1, 1, CURDATE()),
+        ('SHOERT01', 'Cinnamon Rolls', 2, 1, CURDATE()),
+        ('CAKE01', 'Blue Berry Cheese Cake', 3, 2, CURDATE());
+
+/** S - Insert Product Prices **/
+INSERT INTO ProductPriceMap (ProductId, mpt_SizeEnum, Price, Discount, LastUpdateDateTime)
+VALUES 	(1, 2, 550, 0, CURDATE()),
+		(2, 2, 450, 0, CURDATE()),
+        (3, 1, 150, 0, CURDATE()),
+        (3, 2, 250, 0, CURDATE()),
+        (3, 3, 350, 10, CURDATE()),
+        (4, 2, 3550, 20, CURDATE());
+        
+        
