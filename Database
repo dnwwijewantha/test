@@ -1,0 +1,99 @@
+CREATE TABLE BusinessPartner(
+	Id int NOT NULL  AUTO_INCREMENT,
+	Name varchar(255) NOT NULL,
+	mpt_StatusEnum int NOT NULL,
+	CreatedDateTime datetime DEFAULT CURRENT_TIMESTAMP,
+	LastUpdateDateTime datetime NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE BusinessPartnerAddressDetails(
+	Id int NOT NULL  AUTO_INCREMENT,
+	BusinessPartnerId int NOT NULL,
+	Address varchar(500) NOT NULL,
+	CreatedDateTime datetime DEFAULT CURRENT_TIMESTAMP,
+	LastUpdateDateTime datetime NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE BusinessPartnerContactDetails(
+	Id int NOT NULL  AUTO_INCREMENT,
+	BusinessPartnerId int NOT NULL,
+	PhoneNumber varchar(20) NULL,
+	Email varchar(100) NULL,
+	CreatedDateTime datetime DEFAULT CURRENT_TIMESTAMP,
+	LastUpdateDateTime datetime NULL,
+    PRIMARY KEY (Id)
+);
+
+CREATE TABLE MultiPurposeTag(
+	Id int NOT NULL AUTO_INCREMENT,
+	TypeEnum int NOT NULL,
+	Data int NOT NULL,
+	Name varchar(255) NOT NULL,
+	Description varchar(255) NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE MultiPurposeTagType(
+	Id int NOT NULL  AUTO_INCREMENT,
+	Data int NOT NULL,
+	Name varchar(255) NOT NULL,
+	Description varchar(255) NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE Product(
+	Id int NOT NULL  AUTO_INCREMENT,
+	Name varchar(255) NOT NULL,
+	Code varchar(255) NOT NULL,
+	mpt_CategoryEnum int NOT NULL,
+	mpt_StatusEnum int NOT NULL,
+	CreatedDateTime datetime DEFAULT CURRENT_TIMESTAMP,
+	LastUpdateDateTime datetime NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE ProductPriceMap(
+	Id int NOT NULL  AUTO_INCREMENT,
+	ProductId int NOT NULL,
+	mpt_SizeEnum int NOT NULL,
+	Price decimal(18, 2) NOT NULL,
+	Discount decimal(6, 2) NULL,
+	CreatedDateTime datetime DEFAULT CURRENT_TIMESTAMP,
+	LastUpdateDateTime datetime NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE ProductReceiptMap(
+	Id int NOT NULL  AUTO_INCREMENT,
+	ReceiptId int NOT NULL,
+	ProductId int NOT NULL,
+	ProductPriceMapId int NOT NULL,
+	Quantity int NOT NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE Receipt(
+	Id int NOT NULL  AUTO_INCREMENT,
+	BSPId int NOT NULL,
+	TotalAmount decimal(18, 2) NOT NULL,
+	CustomerGivenAmount decimal(18, 2) NOT NULL,
+	Remark varchar(1000) NULL,
+	mpt_Status int NOT NULL,
+	IsPrinted bit NOT NULL,
+	CreatedDateTime datetime DEFAULT CURRENT_TIMESTAMP,
+	LastUpdateDateTime datetime NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE Stock(
+	Id int NOT NULL  AUTO_INCREMENT,
+	ProductId int NOT NULL,
+	mpt_SizeEnum int NOT NULL,
+	CurrentStock int NOT NULL,
+	ReorderLimit int NULL,
+	CreatedDateTime datetime DEFAULT CURRENT_TIMESTAMP,
+	LastUpdateDateTime datetime NULL,
+	PRIMARY KEY (Id)
+);
