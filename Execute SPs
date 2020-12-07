@@ -1,0 +1,14 @@
+ Execute SPs\Execute Insert_ReceiptDetails.sql
+
+SET @ProductDetails := '{"TotalAmount":1000, "CustomerGivenAmount":1000, "Remark":""}';
+SET @ReceiptDetails := '[{"ProductId":1, "ProductPriceMapId":1, "Quantity": 1}, 
+{"ProductId":2, "ProductPriceMapId":3, "Quantity": 2}
+]';
+SET @BusinessPartner := 1;
+CALL Insert_ReceiptDetails(@ProductDetails, @ReceiptDetails, @BusinessPartner);
+
+
+ Execute SPs\Execute Select_AllActiveProducts.sql
+CALL Select_AllActiveProducts();
+
+
